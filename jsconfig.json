@@ -4,6 +4,7 @@
     "module": "esnext",
     "baseUrl": "./",
     "moduleResolution": "node",
+    // 配置src文件夹别名为@ 但是别名不能再node_modules和dist文件夹下不能使用
     "paths": {
       "@/*": [
         "src/*"
