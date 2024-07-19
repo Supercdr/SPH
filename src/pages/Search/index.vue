@@ -1,14 +1,20 @@
 <template>
   <div>
-    搜索页面
-    <h1>params参数: {{ $route.params.keyword }}</h1>
-    <h1>query参数: {{ $route.query.k }}</h1>
+    <toolBar/>
+    <typeNav/>
+    <listContent/>
   </div>
 </template>
 
 <script>
+import toolBar from '@/pages/Search/toolBar'
+import listContent from '@/pages/Search/listContent'
 export default {
-name:'Search'
+  name:'Search',
+  components:{
+    toolBar,
+    listContent,
+  }
 }
 </script>
 

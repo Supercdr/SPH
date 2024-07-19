@@ -5,8 +5,8 @@ import 'nprogress/nprogress.css'
 import axios from 'axios'
 // 利用axios对象的create方法创建一个axios实例
 const requests=axios.create({
-  // 配置基础路径,发请求的时候每个路径中都会包含/api
-  baseURL:'/api',
+  // 模拟mock接口
+  baseURL:'/mock',
   // 设置请求超时的时间
   timeout:5000
 })

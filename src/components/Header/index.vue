@@ -41,29 +41,33 @@
 </template>
 
 <script>
-export default {
-name:'Header',
-data(){
-    return{
-        keyword:''
+    export default {
+        name:'Header',
+        data(){
+            return{
+                keyword:''
+            }
+        },
+        methods:{
+            goSearch(){
+                // 路由传参---params(注意params需要占位)---字符串形式
+                // this.$router.push("/search/"+this.keyword+"?k="+this.keyword.toUpperCase())
+                // 路由传参---params(注意params需要占位)---模板字符串形式
+                // this.$router.push(`/search/${this.keyword}?k=${this.keyword.toUpperCase()}`)
+                let location={
+                    name:'Search',
+                    // 若params传递的是空字符串,在后面添加undefined的或者选项
+                    params:{keyword:this.keyword||undefined},
+                }
+                // 判断是否含有导航栏选择的里的query参数
+                if(this.$route.query){
+                    location.query=this.$route.query
+                }
+                // 路由传参---对象形式
+                this.$router.push(location)
+            }
+        }
     }
-},
-methods:{
-    goSearch(){
-        // 路由传参---params(注意params需要占位)---字符串形式
-        // this.$router.push("/search/"+this.keyword+"?k="+this.keyword.toUpperCase())
-        // 路由传参---params(注意params需要占位)---模板字符串形式
-        // this.$router.push(`/search/${this.keyword}?k=${this.keyword.toUpperCase()}`)
-        // 路由传参---对象形式
-        this.$router.push({
-            name:'Search',
-            // 若params传递的是空字符串,在后面添加undefined的或者选项
-            params:{keyword:''||undefined},
-            query:{k:this.keyword.toUpperCase()}
-        })
-    }
-}
-}
 </script>
 
 <style scoped lang="less">

@@ -5,7 +5,7 @@
               <!--banner轮播-->
               <div class="swiper-container" id="mySwiper">
                   <div class="swiper-wrapper">
-                      <div class="swiper-slide">
+                      <div class="swiper-slide" v-for="img in bannerList" :key="img.id">
                           <img src="./images/banner1.jpg" />
                       </div>
                   </div>
@@ -101,8 +101,37 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
+// 引入swiper
+import Swiper from 'swiper'
 export default {
-name:'ListContainer'
+    name:'ListContainer',
+    computed:{
+        ...mapState({
+                bannerList:(state)=>{
+                    console.log(state)
+                    return state.home.bannerList
+                }
+        })
+    },
+    mounted(){
+        this.$store.dispatch('Home/getBannerList')
+        new Swiper('.swiper-container', { // 可以, 只会匹配, 当前组件中的对应元素
+            // direction: 'vertical', // 垂直切换选项   默认是水平轮播
+            loop: true, // 循环模式
+
+            // 分页器
+            pagination: {
+              el: '.swiper-pagination',
+            },
+
+            // 前进后退按钮
+            navigation: {
+              nextEl: '.swiper-button-next',
+              prevEl: '.swiper-button-prev',
+            },
+          })
+    }
 }
 </script>
 
@@ -112,9 +141,8 @@ name:'ListContainer'
       margin: 0 auto;
 
       .sortList {
-          height: 464px;
+          height: 511px;
           padding-left: 210px;
-
           .center {
               box-sizing: border-box;
               width: 740px;
