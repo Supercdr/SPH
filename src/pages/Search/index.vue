@@ -12,13 +12,13 @@
             </li>
           </ul>
           <ul class="fl sui-tag">
-            <li class="with-x">手机</li>
-            <li class="with-x">iphone<i>×</i></li>
-            <li class="with-x">华为<i>×</i></li>
-            <li class="with-x">OPPO<i>×</i></li>
+            <!-- <li class="with-x">手机</li> -->
+            <li class="with-x" v-if="searchParams.categoryname">{{searchParams.categoryname}}<i @click="removeCategoryName">×</i></li>
+            <li class="with-x" v-if="searchParams.keyword">{{searchParams.keyword}}<i @click="removeKeyword">×</i></li>
+            <li class="with-x" v-if="searchParams.trademark">{{searchParams.trademark.split(':')[1]}}<i @click="removeTrademark">×</i></li>
           </ul>
         </div>
-        <searchSelector />
+        <searchSelector @tradeMark="tradeMark"/>
         <!--details-->
         <div class="details clearfix">
           <div class="sui-navbar">
@@ -208,7 +208,7 @@
 <script>
 import toolBar from "@/pages/Search/toolBar";
 import searchSelector from "@/pages/Search/searchSelector";
-import { mapGetters, mapState } from "vuex";
+import { mapGetters } from "vuex";
 export default {
   name: "Search",
   components: {
@@ -221,11 +221,11 @@ export default {
         category1id:"",
         category2id:"",
         category3id:"",
-        categoryName:"",
+        categoryname:"",
         keyword:"",
         order:"",
         pageNo:1,
-        pageSize:4,
+        pageSize:10,
         props:[],
         trademark:""
       }
@@ -233,7 +233,6 @@ export default {
   },
   beforeMount(){
     Object.assign(this.searchParams,this.$route.params,this.$route.query)
-    console.log(this.searchParams)
   },
   mounted() {
     this.getData()
@@ -244,6 +243,37 @@ export default {
   methods:{
     getData(){
       this.$store.dispatch("getSearchList", this.searchParams);
+    },
+    removeCategoryName(){
+      this.searchParams.categoryname=undefined
+      this.searchParams.category1id=undefined
+      this.searchParams.category2id=undefined
+      this.searchParams.category3id=undefined
+      this.$router.push({name:'Search',params:this.$route.params})
+    },
+    removeKeyword(){
+      this.searchParams.keyword=undefined
+      this.$bus.$emit('clear')
+      this.$router.push({name:'Search',query:this.$route.query})
+    },
+    tradeMark(tm){
+      this.searchParams.trademark=`${tm.tmId}:${tm.tmName}`
+      console.log('tradeMark',this.searchParams)
+    },
+    removeTrademark(){
+      this.searchParams.trademark=undefined
+      this.getData()
+    }
+  },
+  watch:{
+    $route(){
+      console.log('searchParams',this.searchParams)
+      Object.assign(this.searchParams,this.$route.params,this.$route.query)
+      this.getData()
+      // 防止用户点击不同级别的标签时 categoryid不同会导致上次数据不能被覆盖
+      this.searchParams.category1id=undefined
+      this.searchParams.category2id=undefined
+      this.searchParams.category3id=undefined
     }
   }
 };

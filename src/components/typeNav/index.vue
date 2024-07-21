@@ -78,8 +78,7 @@ export default {
             }
         },
         goSearch(e){
-            console.log(e.target.dataset)
-            // 获取用户点击的标签分类数据
+            // dataset获取用户点击的标签自定义分类数据
             let {categoryname,category1id,category2id,category3id}=e.target.dataset
             if(categoryname){
                 let location={name:'Search',query:{categoryname:categoryname}}

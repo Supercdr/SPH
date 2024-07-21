@@ -48,6 +48,9 @@
                 keyword:''
             }
         },
+        mounted(){
+            this.$bus.$on('clear',()=>this.keyword='')
+        },
         methods:{
             goSearch(){
                 // 路由传参---params(注意params需要占位)---字符串形式

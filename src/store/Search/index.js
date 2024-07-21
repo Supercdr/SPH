@@ -5,7 +5,6 @@ const state={
 const mutations={
   GETSEARCHLIST(state,searchList){
     state.searchList=searchList
-    console.log(searchList)
   }
 }
 const actions={
