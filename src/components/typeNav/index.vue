@@ -99,7 +99,6 @@ export default {
     },
     // 组件挂载完毕，向服务器发请求加载数据
     mounted(){
-
         // 通过判断路径设置导航分类的显示与隐藏
         if(this.$route.path!=='/home'){
             this.show=false

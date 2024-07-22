@@ -13,12 +13,27 @@
           </ul>
           <ul class="fl sui-tag">
             <!-- <li class="with-x">手机</li> -->
-            <li class="with-x" v-if="searchParams.categoryname">{{searchParams.categoryname}}<i @click="removeCategoryName">×</i></li>
-            <li class="with-x" v-if="searchParams.keyword">{{searchParams.keyword}}<i @click="removeKeyword">×</i></li>
-            <li class="with-x" v-if="searchParams.trademark">{{searchParams.trademark.split(':')[1]}}<i @click="removeTrademark">×</i></li>
+            <li class="with-x" v-if="searchParams.categoryname">
+              {{ searchParams.categoryname
+              }}<i @click="removeCategoryName">×</i>
+            </li>
+            <li class="with-x" v-if="searchParams.keyword">
+              {{ searchParams.keyword }}<i @click="removeKeyword">×</i>
+            </li>
+            <li class="with-x" v-if="searchParams.trademark">
+              {{ searchParams.trademark.split(":")[1]
+              }}<i @click="removeTrademark">×</i>
+            </li>
+            <li
+              class="with-x"
+              v-for="(attr, index) in searchParams.props"
+              :key="index"
+            >
+              {{ attr.split(":")[1] }}<i @click="removeAttr(index)">×</i>
+            </li>
           </ul>
         </div>
-        <searchSelector @tradeMark="tradeMark"/>
+        <searchSelector @tradeMark="tradeMark" @attrInfo="attrInfo" />
         <!--details-->
         <div class="details clearfix">
           <div class="sui-navbar">
@@ -45,6 +60,7 @@
               </ul>
             </div>
           </div>
+          6
           <div class="goods-list">
             <ul class="yui3-g">
               <li class="yui3-u-1-5" v-for="good in goodsList" :key="good.id">
@@ -215,67 +231,79 @@ export default {
     toolBar,
     searchSelector,
   },
-  data(){
-    return{
-      searchParams:{
-        category1id:"",
-        category2id:"",
-        category3id:"",
-        categoryname:"",
-        keyword:"",
-        order:"",
-        pageNo:1,
-        pageSize:10,
-        props:[],
-        trademark:""
-      }
-    }
+  data() {
+    return {
+      searchParams: {
+        category1id: "",
+        category2id: "",
+        category3id: "",
+        categoryname: "",
+        keyword: "",
+        order: "",
+        pageNo: 1,
+        pageSize: 10,
+        props: [],
+        trademark: "",
+      },
+    };
   },
-  beforeMount(){
-    Object.assign(this.searchParams,this.$route.params,this.$route.query)
+  beforeMount() {
+    Object.assign(this.searchParams, this.$route.params, this.$route.query);
   },
   mounted() {
-    this.getData()
+    this.getData();
   },
   computed: {
     ...mapGetters(["goodsList"]),
   },
-  methods:{
-    getData(){
+  methods: {
+    getData() {
       this.$store.dispatch("getSearchList", this.searchParams);
     },
-    removeCategoryName(){
-      this.searchParams.categoryname=undefined
-      this.searchParams.category1id=undefined
-      this.searchParams.category2id=undefined
-      this.searchParams.category3id=undefined
-      this.$router.push({name:'Search',params:this.$route.params})
+    removeCategoryName() {
+      this.searchParams.categoryname = undefined;
+      this.searchParams.category1id = undefined;
+      this.searchParams.category2id = undefined;
+      this.searchParams.category3id = undefined;
+      this.$router.push({ name: "Search", params: this.$route.params });
     },
-    removeKeyword(){
-      this.searchParams.keyword=undefined
-      this.$bus.$emit('clear')
-      this.$router.push({name:'Search',query:this.$route.query})
+    removeKeyword() {
+      this.searchParams.keyword = undefined;
+      this.$bus.$emit("clear");
+      this.$router.push({ name: "Search", query: this.$route.query });
     },
-    tradeMark(tm){
-      this.searchParams.trademark=`${tm.tmId}:${tm.tmName}`
-      console.log('tradeMark',this.searchParams)
+    tradeMark(tm) {
+      this.searchParams.trademark = `${tm.tmId}:${tm.tmName}`;
+      console.log("tradeMark", this.searchParams);
+      this.getData();
     },
-    removeTrademark(){
-      this.searchParams.trademark=undefined
+    removeTrademark() {
+      this.searchParams.trademark = undefined;
+      this.getData();
+    },
+    attrInfo(attr) {
+      // 判断数组中是否有重复数据，数组去重
+      if(this.searchParams.props.indexOf(attr)==-1){
+        this.searchParams.props.push(attr);
+      }
       this.getData()
-    }
+    },
+    removeAttr(index) {
+      // 使用数组的splice方法删除数组中任意位置的元素，且可以同时删除多个
+      this.searchParams.props.splice(index,1)
+      this.getData()
+    },
   },
-  watch:{
-    $route(){
-      console.log('searchParams',this.searchParams)
-      Object.assign(this.searchParams,this.$route.params,this.$route.query)
-      this.getData()
+  watch: {
+    $route() {
+      Object.assign(this.searchParams, this.$route.params, this.$route.query);
+      this.getData();
       // 防止用户点击不同级别的标签时 categoryid不同会导致上次数据不能被覆盖
-      this.searchParams.category1id=undefined
-      this.searchParams.category2id=undefined
-      this.searchParams.category3id=undefined
-    }
-  }
+      this.searchParams.category1id = undefined;
+      this.searchParams.category2id = undefined;
+      this.searchParams.category3id = undefined;
+    },
+  },
 };
 </script>
 

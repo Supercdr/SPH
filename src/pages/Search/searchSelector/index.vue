@@ -18,7 +18,7 @@
       <div class="fl value">
         <ul class="type-list">
           <li v-for="(value,index) in attr.attrValueList" :key="index">
-            <a>{{ value }}</a>
+            <a @click="attrIndex(value,attr)">{{ value }}</a>
           </li>
         </ul>
       </div>
@@ -39,7 +39,11 @@ export default {
   methods:{
     tradeSearch(tm){
       this.$emit('tradeMark',tm)
-    }
+    },
+    attrIndex(value,attr){
+      let props=`${attr.attrId}:${value}:${attr.attrName}`
+      this.$emit('attrInfo',props)
+    },
   }
 };
 </script>
