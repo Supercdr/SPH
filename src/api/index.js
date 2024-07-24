@@ -7,3 +7,4 @@ export const reqCategory=()=>requests({url:'/product/getBaseCategoryList',method
 export const reqBanner=()=>mockRequests({url:'/banner',method:'get'})
 export const reqFloor=()=>mockRequests({url:'/floor',method:'get'})
 export const reqGetSearch=(params)=>requests({url:'/list',method:'post',data:params})
+export const reqGoodsInfo=(skuId)=>requests({url:`/item/${skuId}`,method:'get'})

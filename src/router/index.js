@@ -1,11 +1,6 @@
 import vue from 'vue'
 import vueRouter from 'vue-router'
-
-import Home from '@/pages/Home'
-import Search from '@/pages/Search'
-import Login from '@/pages/Login'
-import Register from '@/pages/Register'
-
+import routes from './routes'
 vue.use(vueRouter)
 // 修改一下vueRouter原型的push方法,解决重复搜索的问题
 // 保存原始的方法
@@ -32,32 +27,13 @@ vueRouter.prototype.replace=function(location,resolve,reject){
 }
 
 export default new vueRouter({
-  routes:[
-    {
-      path:'/home',
-      component:Home,
-      meta:{showFooter:true}
-    },
-    {
-      name:'Search',
-      path:'/search/:keyword?',
-      component:Search,
-      meta:{showFooter:true}
-    },
-    {
-      path:'/login',
-      component:Login,
-      meta:{showFooter:false}
-    },
-    {
-      path:'/register',
-      component:Register,
-      meta:{showFooter:false}
-    },
-    // 首页路由重定向
-    {
-      path:'*',
-      redirect:'/home'
+  routes,
+  // 设置路由跳转到新页面时页面的滚动位置
+  scrollBehavior(to,from,savadPosition){
+    if(savadPosition){
+      return savadPosition
+    }else{
+      return {x:0,y:0}
     }
-  ]
+  }
 })

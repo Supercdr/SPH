@@ -39,41 +39,29 @@
           <div class="sui-navbar">
             <div class="navbar-inner filter">
               <ul class="sui-nav">
-                <li class="active">
-                  <a href="#">综合</a>
+                <li :class="{active:isOne}" @click="changeSort(1)">
+                  <a>综合<span v-if="isOne" v-text="isAsc?'⬆':'⬇'"></span></a>
                 </li>
-                <li>
-                  <a href="#">销量</a>
-                </li>
-                <li>
-                  <a href="#">新品</a>
-                </li>
-                <li>
-                  <a href="#">评价</a>
-                </li>
-                <li>
-                  <a href="#">价格⬆</a>
-                </li>
-                <li>
-                  <a href="#">价格⬇</a>
+                <li :class="{active:isTwo}" @click="changeSort(2)">
+                  <a>价格<span v-if="isTwo" v-text="isAsc?'⬆':'⬇'"></span></a>
                 </li>
               </ul>
             </div>
           </div>
-          6
+          
           <div class="goods-list">
             <ul class="yui3-g">
               <li class="yui3-u-1-5" v-for="good in goodsList" :key="good.id">
                 <div class="list-wrap">
                   <div class="p-img">
-                    <a href="item.html" target="_blank"
-                      ><img :src="good.defaultImg"
-                    /></a>
+                  <router-link :to="`/detail/${good.id}`">
+                    <img :src="good.defaultImg"
+                    /></router-link >
                   </div>
                   <div class="price">
                     <strong>
                       <em>¥</em>
-                      <i> {{ good.price }} </i>
+                      <i>&nbsp;{{ good.price }} </i>
                     </strong>
                   </div>
                   <div class="attr">
@@ -102,35 +90,7 @@
               </li>
             </ul>
           </div>
-          <div class="fr page">
-            <div class="sui-pagination clearfix">
-              <ul>
-                <li class="prev disabled">
-                  <a href="#">«上一页</a>
-                </li>
-                <li class="active">
-                  <a href="#">1</a>
-                </li>
-                <li>
-                  <a href="#">2</a>
-                </li>
-                <li>
-                  <a href="#">3</a>
-                </li>
-                <li>
-                  <a href="#">4</a>
-                </li>
-                <li>
-                  <a href="#">5</a>
-                </li>
-                <li class="dotted"><span>...</span></li>
-                <li class="next">
-                  <a href="#">下一页»</a>
-                </li>
-              </ul>
-              <div><span>共10页&nbsp;</span></div>
-            </div>
-          </div>
+          <Pagenation :pageNo="searchParams.pageNo" :pageSize="searchParams.pageSize" :totalData="totalData" :continues="5" @getPageNo="getPageNo"/>
         </div>
         <!--hotsale-->
         <div class="clearfix hot-sale">
@@ -224,7 +184,7 @@
 <script>
 import toolBar from "@/pages/Search/toolBar";
 import searchSelector from "@/pages/Search/searchSelector";
-import { mapGetters } from "vuex";
+import { mapGetters, mapState } from "vuex";
 export default {
   name: "Search",
   components: {
@@ -239,7 +199,7 @@ export default {
         category3id: "",
         categoryname: "",
         keyword: "",
-        order: "",
+        order: "1 desc",
         pageNo: 1,
         pageSize: 10,
         props: [],
@@ -255,6 +215,21 @@ export default {
   },
   computed: {
     ...mapGetters(["goodsList"]),
+    isOne(){
+      return this.searchParams.order.indexOf('1')!=-1
+    },
+    isTwo(){
+      return this.searchParams.order.indexOf('2')!=-1
+    },
+    isAsc(){
+      return this.searchParams.order.indexOf('asc')!=-1
+    },
+    isDesc(){
+      return this.searchParams.order.indexOf('desc')!=-1
+    },
+    ...mapState({
+      totalData:state=>state.Search.searchList.total
+    })
   },
   methods: {
     getData() {
@@ -274,7 +249,6 @@ export default {
     },
     tradeMark(tm) {
       this.searchParams.trademark = `${tm.tmId}:${tm.tmName}`;
-      console.log("tradeMark", this.searchParams);
       this.getData();
     },
     removeTrademark() {
@@ -293,6 +267,20 @@ export default {
       this.searchParams.props.splice(index,1)
       this.getData()
     },
+    changeSort(value){
+      let originValue=this.searchParams.order.split(":")[0]
+      let originSort=this.searchParams.order.split(":")[1]
+      if(originValue==value){
+        this.searchParams.order=`${value}:${originSort=='asc'?'desc':'asc'}`
+      }else{
+        this.searchParams.order=`${value}:'desc'`
+      }
+      this.getData()
+    },
+    getPageNo(page){
+      this.searchParams.pageNo=page
+      this.getData()
+    }
   },
   watch: {
     $route() {
@@ -513,82 +501,7 @@ export default {
           }
         }
       }
-      .page {
-        width: 733px;
-        height: 66px;
-        overflow: hidden;
-        float: right;
-        .sui-pagination {
-          margin: 18px 0;
-          ul {
-            margin-left: 0;
-            margin-bottom: 0;
-            vertical-align: middle;
-            width: 490px;
-            float: left;
-            li {
-              line-height: 18px;
-              display: inline-block;
-              a {
-                position: relative;
-                float: left;
-                line-height: 18px;
-                text-decoration: none;
-                background-color: #fff;
-                border: 1px solid #e0e9ee;
-                margin-left: -1px;
-                font-size: 14px;
-                padding: 9px 18px;
-                color: #333;
-              }
-              &.active {
-                a {
-                  background-color: #fff;
-                  color: #e1251b;
-                  border-color: #fff;
-                  cursor: default;
-                }
-              }
-              &.prev {
-                a {
-                  background-color: #fafafa;
-                }
-              }
-              &.disabled {
-                a {
-                  color: #999;
-                  cursor: default;
-                }
-              }
-              &.dotted {
-                span {
-                  margin-left: -1px;
-                  position: relative;
-                  float: left;
-                  line-height: 18px;
-                  text-decoration: none;
-                  background-color: #fff;
-                  font-size: 14px;
-                  border: 0;
-                  padding: 9px 18px;
-                  color: #333;
-                }
-              }
-              &.next {
-                a {
-                  background-color: #fafafa;
-                }
-              }
-            }
-          }
-          div {
-            color: #333;
-            font-size: 14px;
-            float: right;
-            width: 241px;
-          }
-        }
-      }
+
     }
     .hot-sale {
       margin-bottom: 5px;
