@@ -242,6 +242,7 @@ export default {
       this.searchParams.category3id = undefined;
       this.$router.push({ name: "Search", params: this.$route.params });
     },
+    // 通知home组件清空输入框
     removeKeyword() {
       this.searchParams.keyword = undefined;
       this.$bus.$emit("clear");

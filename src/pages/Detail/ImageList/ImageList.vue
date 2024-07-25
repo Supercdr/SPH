@@ -1,12 +1,12 @@
 <template>
-  <div class="swiper-container">
+  <div class="swiper-container" ref="cur">
     <div class="swiper-wrapper">
       <div
         class="swiper-slide"
         v-for="skuImage in skuImageList"
         :key="skuImage.id"
       >
-        <img :src="skuImage.imgUrl" />
+        <img :src="skuImage.imgUrl" @click="$bus.$emit('changeImage',skuImage.id)"/>
       </div>
     </div>
     <div class="swiper-button-next"></div>
@@ -20,6 +20,27 @@ export default {
   name: "ImageList",
   props: ["skuImageList"],
   computed: {},
+
+  watch: {
+    skuImageList() {
+      this.$nextTick(() => {
+        new Swiper(this.$refs.cur, {
+          // 设置页面显示三张图片
+          slidesPerView:3,
+          // 如果需要分页器
+          pagination: {
+            el: ".swiper-pagination",
+          },
+          // 如果需要前进后退按钮
+          navigation: {
+            nextEl: ".swiper-button-next",
+            prevEl: ".swiper-button-prev",
+          },
+
+        });
+      });
+    },
+  },
 };
 </script>
 

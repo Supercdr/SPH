@@ -88,6 +88,7 @@
                   :class="{ active: spuSaleAttrValue.isChecked == 1 }"
                   v-for="spuSaleAttrValue in spuSaleAttr.spuSaleAttrValueList"
                   :key="spuSaleAttrValue.id"
+                  @click="changeIsChecked(spuSaleAttrValue.id,spuSaleAttr.spuSaleAttrValueList)"
                 >
                   {{ spuSaleAttrValue.saleAttrValueName }}
                 </dd>
@@ -355,6 +356,17 @@ export default {
       // 防止在请求数据返回之前页面已经加载完毕，读取到空数组为undefined的情况
       return this.skuInfo.skuImageList || [];
     },
+  },
+  methods:{
+    changeIsChecked(id,arr){
+      arr.forEach(item => {
+        item.isChecked=0
+        if(item.id==id){
+          item.isChecked=1
+        }
+      });
+    },
+
   },
   mounted() {
     this.$store.dispatch("getGoodsInfo", this.$route.params.skuId);
