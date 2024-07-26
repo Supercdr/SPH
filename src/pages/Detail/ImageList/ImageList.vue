@@ -3,10 +3,15 @@
     <div class="swiper-wrapper">
       <div
         class="swiper-slide"
-        v-for="skuImage in skuImageList"
+        v-for="(skuImage,index) in skuImageList"
         :key="skuImage.id"
       >
-        <img :src="skuImage.imgUrl" @click="$bus.$emit('changeImage',skuImage.id)"/>
+        <img
+          :src="skuImage.imgUrl"
+          @click="$bus.$emit('changeImage', skuImage.id)"
+          @mouseenter="changeActive(index)"
+          :class="{active:skuIndex==index}"
+        />
       </div>
     </div>
     <div class="swiper-button-next"></div>
@@ -20,13 +25,22 @@ export default {
   name: "ImageList",
   props: ["skuImageList"],
   computed: {},
-
+  data(){
+return{
+  skuIndex:0
+}
+  },
+  methods: {
+    changeActive(index) {
+      this.skuIndex=index
+    },
+  },
   watch: {
     skuImageList() {
       this.$nextTick(() => {
         new Swiper(this.$refs.cur, {
           // 设置页面显示三张图片
-          slidesPerView:3,
+          slidesPerView: 3,
           // 如果需要分页器
           pagination: {
             el: ".swiper-pagination",
@@ -36,7 +50,6 @@ export default {
             nextEl: ".swiper-button-next",
             prevEl: ".swiper-button-prev",
           },
-
         });
       });
     },
@@ -65,11 +78,6 @@ export default {
       display: block;
 
       &.active {
-        border: 2px solid #f60;
-        padding: 1px;
-      }
-
-      &:hover {
         border: 2px solid #f60;
         padding: 1px;
       }

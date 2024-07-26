@@ -1,6 +1,8 @@
 // 引入nProgress进度条及其样式
 import nprogress from 'nprogress'
 import 'nprogress/nprogress.css'
+// 引入store中的uuid
+import store from '@/store'
 // 对于axios进行二次封装
 import axios from 'axios'
 // 利用axios对象的create方法创建一个axios实例
@@ -14,6 +16,8 @@ const requests=axios.create({
 requests.interceptors.request.use((config)=>{
   // 请求条开始
   nprogress.start()
+  // 在请求头中添加userTempId
+  config.headers.userTempId=store.state.ShopCart.uuid_token
   // config配置对象,其中包含请求头headers
   return config
 })

@@ -1,4 +1,4 @@
-import {reqGoodsInfo} from '@/api'
+import {reqGoodsInfo,reqAddOrUpdateGoods} from '@/api'
 const state={
   goodsInfo:{}
 }
@@ -13,6 +13,14 @@ const actions={
     if(result.code==200){
       commit('GETGOODSINFO',result.data)
     }
+  },
+  async addGoods({commit},{skuId,skuNum}){
+    let result =await reqAddOrUpdateGoods(skuId,skuNum)
+    if(result.code==200){
+      return 'Add success'
+    }else{
+      return Promise.reject(new error('fail'))
+    }
   }
 }
 const getters={
@@ -24,7 +32,8 @@ const getters={
   },
   spuSaleAttrList(){
     return state.goodsInfo.spuSaleAttrList||{}
-  }
+  },
+
 }
 export default{
   state,

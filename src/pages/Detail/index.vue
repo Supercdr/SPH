@@ -88,7 +88,12 @@
                   :class="{ active: spuSaleAttrValue.isChecked == 1 }"
                   v-for="spuSaleAttrValue in spuSaleAttr.spuSaleAttrValueList"
                   :key="spuSaleAttrValue.id"
-                  @click="changeIsChecked(spuSaleAttrValue.id,spuSaleAttr.spuSaleAttrValueList)"
+                  @click="
+                    changeIsChecked(
+                      spuSaleAttrValue.id,
+                      spuSaleAttr.spuSaleAttrValueList
+                    )
+                  "
                 >
                   {{ spuSaleAttrValue.saleAttrValueName }}
                 </dd>
@@ -96,12 +101,17 @@
             </div>
             <div class="cartWrap">
               <div class="controls">
-                <input autocomplete="off" class="itxt" />
-                <a href="javascript:" class="plus">+</a>
-                <a href="javascript:" class="mins">-</a>
+                <input
+                  autocomplete="off"
+                  class="itxt"
+                  v-model="num"
+                  @change="changeNum"
+                />
+                <a class="plus" @click="num++">+</a>
+                <a class="mins" @click="num > 1 ? num-- : num == 1">-</a>
               </div>
               <div class="add">
-                <a href="javascript:">加入购物车</a>
+                <a @click="addGoods">加入购物车</a>
               </div>
             </div>
           </div>
@@ -350,6 +360,11 @@ export default {
     ImageList,
     Zoom,
   },
+  data() {
+    return {
+      num: 1,
+    };
+  },
   computed: {
     ...mapGetters(["categoryView", "skuInfo", "spuSaleAttrList"]),
     skuImageList() {
@@ -357,16 +372,31 @@ export default {
       return this.skuInfo.skuImageList || [];
     },
   },
-  methods:{
-    changeIsChecked(id,arr){
-      arr.forEach(item => {
-        item.isChecked=0
-        if(item.id==id){
-          item.isChecked=1
+  methods: {
+    changeIsChecked(id, arr) {
+      arr.forEach((item) => {
+        item.isChecked = 0;
+        if (item.id == id) {
+          item.isChecked = 1;
         }
       });
     },
-
+    changeNum(e) {
+      if (isNaN(this.num) || this.num < 1) {
+        this.num = 1;
+      }
+      this.num = parseInt(this.num);
+    },
+    async addGoods() {
+      sessionStorage.setItem('SKUINFO',JSON.stringify(this.skuInfo))
+      let result = await this.$store.dispatch("addGoods", {
+        skuId: this.$route.params.skuId,
+        skuNum: this.num,
+      });
+      if (result == "Add success") {
+        this.$router.push({ name: "AddCartSuccess",query:{num:this.num} });
+      }
+    },
   },
   mounted() {
     this.$store.dispatch("getGoodsInfo", this.$route.params.skuId);
@@ -564,6 +594,7 @@ export default {
                 position: absolute;
                 right: -8px;
                 border: 1px solid #ccc;
+                text-decoration: none;
               }
 
               .mins {
@@ -581,6 +612,7 @@ export default {
               float: left;
 
               a {
+                text-decoration: none;
                 background-color: #e1251b;
                 padding: 0 25px;
                 font-size: 16px;
@@ -672,6 +704,7 @@ export default {
                     margin: 5px 0;
 
                     a {
+                      text-decoration: none;
                       background-color: transparent;
                       border: 1px solid #8c8c8c;
                       color: #8c8c8c;

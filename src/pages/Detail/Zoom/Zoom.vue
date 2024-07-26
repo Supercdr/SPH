@@ -1,11 +1,13 @@
 <template>
   <div class="spec-preview">
     <img :src="imgObj.imgUrl" />
-    <div class="event"></div>
+    <div class="event" @mousemove="changeMask" ref="area"></div>
+    <!-- 放大区域 -->
     <div class="big">
-      <img :src="imgObj.imgUrl" />
+      <img :src="imgObj.imgUrl"  ref="bigImg"/>
     </div>
-    <div class="mask"></div>
+    <!-- 遮罩区域 -->
+    <div class="mask" ref="mask"></div>
   </div>
 </template>
 
@@ -20,24 +22,39 @@ export default {
   },
   computed: {
     imgObj() {
-      let item=this.skuImageList.forEach((item) => {
-          if (item.id == this.imgId) {
-            console.log(item)
-            return item||{};
-          }else{
-            return this.skuImageList[0]
-          }
-        }) 
+      if (this.skuImageList && this.skuImageList.length > 0) {
+        let result = this.skuImageList.find((item) => item.id == this.imgId);
+        return result || this.skuImageList[0];
+      }
       // 防止在请求数据返回之前页面已经加载完毕，读取到空数组为undefined的情况
-      return  item||{}
-      },
+      return {};
+    },
   },
   methods: {},
   mounted() {
     this.$bus.$on("changeImage", (imgId) => {
-      console.log("changeImage", imgId);
       this.imgId = imgId;
     });
+  },
+  methods: {
+    changeMask(e) {
+      let { mask, area, bigImg } = this.$refs;
+      let left = e.offsetX - mask.offsetWidth / 2;
+      let top = e.offsetY - mask.offsetHeight / 2;
+      if (left < 0) left = 0;
+      if (left > area.offsetWidth - mask.offsetWidth)
+        left = area.offsetWidth - mask.offsetWidth;
+      if (top < 0) top = 0;
+      if (top > area.offsetHeight - mask.offsetHeight)
+        top = area.offsetHeight - mask.offsetHeight;
+      mask.style.left = left + "px";
+      mask.style.top = top + "px";
+      bigImg.style.top=-top*2+ "px";
+      bigImg.style.left=-left*2+ "px";
+    },
+  },
+  beforeDestroy() {
+    this.$bus.$off("changeImage");
   },
 };
 </script>
