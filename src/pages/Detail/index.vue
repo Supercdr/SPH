@@ -388,13 +388,15 @@ export default {
       this.num = parseInt(this.num);
     },
     async addGoods() {
-      sessionStorage.setItem('SKUINFO',JSON.stringify(this.skuInfo))
-      let result = await this.$store.dispatch("addGoods", {
-        skuId: this.$route.params.skuId,
-        skuNum: this.num,
-      });
-      if (result == "Add success") {
-        this.$router.push({ name: "AddCartSuccess",query:{num:this.num} });
+      try {
+        sessionStorage.setItem("SKUINFO", JSON.stringify(this.skuInfo));
+        await this.$store.dispatch("addGoods", {
+          skuId: this.$route.params.skuId,
+          skuNum: this.num,
+        });
+        this.$router.push({ name: "AddCartSuccess", query: { num: this.num } });
+      } catch (error) {
+        alert(error.message);
       }
     },
   },

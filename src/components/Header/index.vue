@@ -10,6 +10,9 @@
                         <router-link to="/login">登录</router-link>
                         <router-link to="/register" class="register">免费注册</router-link>
                     </p>
+                    <p>
+                        <span></span>
+                    </p>
                 </div>
                 <div class="typeList">
                     <a href="###">我的订单</a>
@@ -41,12 +44,20 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
+
     export default {
         name:'Header',
         data(){
             return{
                 keyword:''
             }
+        },
+        computed:{
+            // userToken(){
+            //     return this.$store.state.Register.token
+            // },
+            ...mapState(['token'])
         },
         mounted(){
             this.$bus.$on('clear',()=>this.keyword='')

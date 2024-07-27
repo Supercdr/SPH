@@ -17,9 +17,9 @@ const actions={
   async addGoods({commit},{skuId,skuNum}){
     let result =await reqAddOrUpdateGoods(skuId,skuNum)
     if(result.code==200){
-      return 'Add success'
+      return 'success'
     }else{
-      return Promise.reject(new error('fail'))
+      return Promise.reject(new Error('addOrUpdate fail'))
     }
   }
 }

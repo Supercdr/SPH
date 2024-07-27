@@ -17,7 +17,14 @@ requests.interceptors.request.use((config)=>{
   // 请求条开始
   nprogress.start()
   // 在请求头中添加userTempId
-  config.headers.userTempId=store.state.ShopCart.uuid_token
+  if(store.state.ShopCart.uuid_token){
+    config.headers.userTempId=store.state.ShopCart.uuid_token
+  }
+  // 在请求头中添加token
+  if(store.state.Register.token){
+    console.log(store.state)
+    config.headers.token=store.state.Register.token
+  }
   // config配置对象,其中包含请求头headers
   return config
 })
@@ -30,6 +37,6 @@ requests.interceptors.response.use((res)=>{
 },(error)=>{
   // 响应失败的回调函数
   // 中止promise链
-  return Promise.reject(new error('fail'))
+  return Promise.reject(new Error('request fail'))
 })
 export default requests

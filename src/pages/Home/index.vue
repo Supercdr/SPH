@@ -36,6 +36,8 @@ export default {
   },
   mounted() {
     this.$store.dispatch("Home/getFloorList");
+    // 获取用户信息
+    this.$store.dispatch('getUserInfo')
   },
 };
 </script>
