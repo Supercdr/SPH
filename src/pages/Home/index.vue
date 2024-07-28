@@ -35,9 +35,11 @@ export default {
     }),
   },
   mounted() {
-    this.$store.dispatch("Home/getFloorList");
-    // 获取用户信息
-    this.$store.dispatch('getUserInfo')
+    try {
+      this.$store.dispatch("Home/getFloorList");
+    } catch (error) {
+      alert(error.message);
+    }
   },
 };
 </script>

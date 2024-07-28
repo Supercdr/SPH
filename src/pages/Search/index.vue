@@ -77,8 +77,6 @@
                   </div>
                   <div class="operate">
                     <a
-                      href="success-cart.html"
-                      target="_blank"
                       class="sui-btn btn-bordered btn-danger"
                       >加入购物车</a
                     >

@@ -1,8 +1,10 @@
-import {reqResgisterCode,reqResgister,reqLogin,reqUserInfo} from '@/api'
+import {reqResgisterCode,reqResgister,reqLogin,reqUserInfo,reqLogout} from '@/api'
 import {getToken,setToken,clearToken} from '@/utils/token'
 const state={
   code:'',
-  token:getToken
+  token:getToken(),
+  userInfo:{}
+
 }
 const mutations={
   REGISTERCODE(state,code){
@@ -10,13 +12,18 @@ const mutations={
   },
   LOGIN(state,token){
     state.token=token
+  },
+  GETUSERINFO(state,userInfo){
+    state.userInfo=userInfo
+  },
+  LOGOUT(state){
+    state.code=''
+    state.userInfo=''
+    clearToken()
   }
 }
 const actions={
-  async getUserInfo({commit}){
-    let result = await reqUserInfo()
-    console.log(result)
-  },
+
   async getRegisterCode({commit},phone){
     let result=await reqResgisterCode(phone)
     if(result.code==200){
@@ -39,6 +46,24 @@ const actions={
       return 'login success'
     }else{
       return Promise.reject(new Error('登录失败'))
+    }
+  },
+  async getUserInfo({commit}){
+    let result = await reqUserInfo()
+    if(result.code==200){
+      commit('GETUSERINFO',result.data)
+      return 'get success'
+    }else{
+      return Promise.reject(new Error('get fail'))
+    }
+  },
+  async logout({commit}){
+    let result=await reqLogout()
+    if(result.code==200){
+      commit('LOGOUT')
+      return 'logout success'
+    }else{
+      return Promise.reject(new Error('退出失败'))
     }
   }
 }

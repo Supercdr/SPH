@@ -22,7 +22,6 @@ requests.interceptors.request.use((config)=>{
   }
   // 在请求头中添加token
   if(store.state.Register.token){
-    console.log(store.state)
     config.headers.token=store.state.Register.token
   }
   // config配置对象,其中包含请求头headers
