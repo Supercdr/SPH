@@ -39,24 +39,28 @@
           <div class="sui-navbar">
             <div class="navbar-inner filter">
               <ul class="sui-nav">
-                <li :class="{active:isOne}" @click="changeSort(1)">
-                  <a>综合<span v-if="isOne" v-text="isAsc?'⬆':'⬇'"></span></a>
+                <li :class="{ active: isOne }" @click="changeSort(1)">
+                  <a
+                    >综合<span v-if="isOne" v-text="isAsc ? '⬆' : '⬇'"></span
+                  ></a>
                 </li>
-                <li :class="{active:isTwo}" @click="changeSort(2)">
-                  <a>价格<span v-if="isTwo" v-text="isAsc?'⬆':'⬇'"></span></a>
+                <li :class="{ active: isTwo }" @click="changeSort(2)">
+                  <a
+                    >价格<span v-if="isTwo" v-text="isAsc ? '⬆' : '⬇'"></span
+                  ></a>
                 </li>
               </ul>
             </div>
           </div>
-          
+
           <div class="goods-list">
             <ul class="yui3-g">
               <li class="yui3-u-1-5" v-for="good in goodsList" :key="good.id">
                 <div class="list-wrap">
                   <div class="p-img">
-                  <router-link :to="`/detail/${good.id}`">
-                    <img :src="good.defaultImg"
-                    /></router-link >
+                    <router-link :to="`/detail/${good.id}`">
+                      <img :src="good.defaultImg"
+                    /></router-link>
                   </div>
                   <div class="price">
                     <strong>
@@ -76,10 +80,7 @@
                     <i class="command">已有<span>2000</span>人评价</i>
                   </div>
                   <div class="operate">
-                    <a
-                      class="sui-btn btn-bordered btn-danger"
-                      >加入购物车</a
-                    >
+                    <a class="sui-btn btn-bordered btn-danger">加入购物车</a>
                     <a href="javascript:void(0);" class="sui-btn btn-bordered"
                       >收藏</a
                     >
@@ -88,7 +89,13 @@
               </li>
             </ul>
           </div>
-          <Pagenation :pageNo="searchParams.pageNo" :pageSize="searchParams.pageSize" :totalData="totalData" :continues="5" @getPageNo="getPageNo"/>
+          <Pagenation
+            :pageNo="searchParams.pageNo"
+            :pageSize="searchParams.pageSize"
+            :totalData="totalData"
+            :continues="5"
+            @getPageNo="getPageNo"
+          />
         </div>
         <!--hotsale-->
         <div class="clearfix hot-sale">
@@ -213,21 +220,21 @@ export default {
   },
   computed: {
     ...mapGetters(["goodsList"]),
-    isOne(){
-      return this.searchParams.order.indexOf('1')!=-1
+    isOne() {
+      return this.searchParams.order.indexOf("1") != -1;
     },
-    isTwo(){
-      return this.searchParams.order.indexOf('2')!=-1
+    isTwo() {
+      return this.searchParams.order.indexOf("2") != -1;
     },
-    isAsc(){
-      return this.searchParams.order.indexOf('asc')!=-1
+    isAsc() {
+      return this.searchParams.order.indexOf("asc") != -1;
     },
-    isDesc(){
-      return this.searchParams.order.indexOf('desc')!=-1
+    isDesc() {
+      return this.searchParams.order.indexOf("desc") != -1;
     },
     ...mapState({
-      totalData:state=>state.Search.searchList.total
-    })
+      totalData: (state) => state.Search.searchList.total,
+    }),
   },
   methods: {
     getData() {
@@ -256,30 +263,32 @@ export default {
     },
     attrInfo(attr) {
       // 判断数组中是否有重复数据，数组去重
-      if(this.searchParams.props.indexOf(attr)==-1){
+      if (this.searchParams.props.indexOf(attr) == -1) {
         this.searchParams.props.push(attr);
       }
-      this.getData()
+      this.getData();
     },
     removeAttr(index) {
       // 使用数组的splice方法删除数组中任意位置的元素，且可以同时删除多个
-      this.searchParams.props.splice(index,1)
-      this.getData()
+      this.searchParams.props.splice(index, 1);
+      this.getData();
     },
-    changeSort(value){
-      let originValue=this.searchParams.order.split(":")[0]
-      let originSort=this.searchParams.order.split(":")[1]
-      if(originValue==value){
-        this.searchParams.order=`${value}:${originSort=='asc'?'desc':'asc'}`
-      }else{
-        this.searchParams.order=`${value}:'desc'`
+    changeSort(value) {
+      let originValue = this.searchParams.order.split(":")[0];
+      let originSort = this.searchParams.order.split(":")[1];
+      if (originValue == value) {
+        this.searchParams.order = `${value}:${
+          originSort == "asc" ? "desc" : "asc"
+        }`;
+      } else {
+        this.searchParams.order = `${value}:'desc'`;
       }
-      this.getData()
+      this.getData();
     },
-    getPageNo(page){
-      this.searchParams.pageNo=page
-      this.getData()
-    }
+    getPageNo(page) {
+      this.searchParams.pageNo = page;
+      this.getData();
+    },
   },
   watch: {
     $route() {
@@ -500,7 +509,6 @@ export default {
           }
         }
       }
-
     }
     .hot-sale {
       margin-bottom: 5px;

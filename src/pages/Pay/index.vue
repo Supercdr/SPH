@@ -11,7 +11,9 @@
         <div class="paymark">
           <span class="fl"
             >请您在提交订单<em class="orange time">4小时</em
-            >之内完成支付，超时订单会自动取消。订单号：<em>{{payInfo.orderId}}</em></span
+            >之内完成支付，超时订单会自动取消。订单号：<em>{{
+              payInfo.orderId
+            }}</em></span
           >
           <span class="fr"
             ><em class="lead">应付金额：</em
@@ -91,69 +93,68 @@
 </template>
 
 <script>
-import QRCode from 'qrcode'
+import QRCode from "qrcode";
 export default {
   name: "Pay",
-  data(){
-    return{
-      payInfo:{},
-      code:'',
-      timer:''
-    }
+  data() {
+    return {
+      payInfo: {},
+      code: "",
+      timer: "",
+    };
   },
-  mounted(){
-    this.getPayInfo()
+  mounted() {
+    this.getPayInfo();
   },
   methods: {
-    async getPayInfo(){
+    async getPayInfo() {
       let result = await this.$API.reqTradeInfo(this.$route.query.orderId);
-      console.log(result)
+      console.log(result);
       if (result.code == 200) {
-        this.payInfo=result.data
+        this.payInfo = result.data;
       } else {
         alert(result.message);
       }
     },
     async open() {
-        let url =await QRCode.toDataURL(this.payInfo.codeUrl)
-        this.$alert(`<img src=${url} />`, "请使用微信支付", {
-          dangerouslyUseHTMLString: true, //是否将 message 属性作为 HTML 片段处理
-          showCancelButton: true, //是否显示取消按钮
-          cancelButtonText: "支付遇见问题", //取消按钮的文本内容
-          confirmButtonText: "已支付完成", //确认按钮的文本内容
-          center: true, //居中显示
-          // 关闭弹框的回调
-          beforeClose:(type,instance,done)=>{
-            if(type=='cancel'){
-              alert('请联系管理员')
-              clearInterval(this.timer)
-              this.timer=''
-              done()
-            }else{
-              // if(this.code=='200'){
-                clearInterval(this.timer)
-                this.timer=''
-                done()
-                this.$router.push('/paySuccess')
-              // }
-            }
+      let url = await QRCode.toDataURL(this.payInfo.codeUrl);
+      this.$alert(`<img src=${url} />`, "请使用微信支付", {
+        dangerouslyUseHTMLString: true, //是否将 message 属性作为 HTML 片段处理
+        showCancelButton: true, //是否显示取消按钮
+        cancelButtonText: "支付遇见问题", //取消按钮的文本内容
+        confirmButtonText: "已支付完成", //确认按钮的文本内容
+        center: true, //居中显示
+        // 关闭弹框的回调
+        beforeClose: (type, instance, done) => {
+          if (type == "cancel") {
+            alert("请联系管理员");
+            clearInterval(this.timer);
+            this.timer = "";
+            done();
+          } else {
+            // if(this.code=='200'){
+            clearInterval(this.timer);
+            this.timer = "";
+            done();
+            this.$router.push("/paySuccess");
+            // }
           }
-        });
-        // 设置一个定时器，定时发送请求查询订单支付状态，若支付成功，则清空定时器
-        if(!this.timer){
-          this.timer=setInterval(async ()=>{
-          let result= await this.$API.reqPayStatus(this.payInfo.orderId)
-          console.log(result)
-          if(result.code==200){
-            clearInterval(this.timer)
-            this.timer=''
-            this.code=result.code
-            this.$msgbox.close()
-            this.$router.push('/paySuccess')
-          }
-        },1000)
-        }
-        
+        },
+      });
+      // 设置一个定时器，定时发送请求查询订单支付状态，若支付成功，则清空定时器
+      if (!this.timer) {
+        this.timer = setInterval(async () => {
+          let result = await this.$API.reqPayStatus(this.payInfo.orderId);
+          console.log(result);
+          if (result.code == 200) {
+            clearInterval(this.timer);
+            this.timer = "";
+            this.code = result.code;
+            this.$msgbox.close();
+            this.$router.push("/paySuccess");
+          } 
+        }, 1000);
+      }
     },
   },
 };

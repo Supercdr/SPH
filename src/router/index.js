@@ -72,7 +72,13 @@ route.beforeEach(async (to, from, next) => {
   } else {
     // 未登录
     console.log('没有token')
-    next();
+    let toPath=['pay','center','shopCart']
+    if(toPath.indexOf(to.path)==-1){
+      console.log(toPath.indexOf(to.path))
+      next('/login')
+    }else{
+      next();
+    }
   }
 });
 export default route;

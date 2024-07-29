@@ -36,7 +36,7 @@ export default {
   },
   mounted() {
     try {
-      this.$store.dispatch("Home/getFloorList");
+      this.$store.dispatch("getFloorList");
     } catch (error) {
       alert(error.message);
     }

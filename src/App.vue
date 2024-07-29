@@ -18,7 +18,7 @@ export default {
   mounted(){
     // 加载组件时最先加载App组件，其mounted只加载一次，所以将数据请求放在App的mounted中可使请求只发送一次，优化了性能
     // 通知vuex发请求获取数据，并且将数据存储在仓库中
-    this.$store.dispatch('Home/getCategoryList')
+    this.$store.dispatch('getCategoryList')
   }
 }
 </script>

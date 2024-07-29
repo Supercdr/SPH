@@ -87,7 +87,7 @@ export default {
     }),
   },
   mounted() {
-    this.$store.dispatch("Home/getBannerList");
+    this.$store.dispatch("getBannerList");
   },
 };
 </script>

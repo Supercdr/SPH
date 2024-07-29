@@ -9,7 +9,35 @@ import ShopCart from '@/pages/ShopCart'
 import Trade from '@/pages/Trade'
 import Pay from '@/pages/Pay'
 import PaySuccess from '@/pages/PaySuccess'
+import Center from '@/pages/Center'
+import MyOrder from '@/pages/Center/myOrder'
+import GroupOrder from '@/pages/Center/groupOrder'
 export default [
+  {
+    path:'/center',
+    name:'Center',
+    component:Center,
+    meta:{showFooter:true},
+    children:[
+      {
+        path:'myorder',
+        name:'MyOrder',
+        component:MyOrder
+      },
+      {
+        path:'grouporder',
+        name:'GroupOrder',
+        component:GroupOrder
+      },
+      // 路由重定向
+      {
+        path:'/center',
+        redirect:'/center/myorder'
+      },
+    ],
+    
+  },
+  
   {
     path:'/paySuccess',
     name:'PaySuccess',

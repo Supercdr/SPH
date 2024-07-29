@@ -14,8 +14,7 @@ const requests=axios.create({
 })
 // 请求拦截器,在发请求之前都会被检测到,可以在请求发出之前进行一些操作
 requests.interceptors.request.use((config)=>{
-  // 请求条开始
-  nprogress.start()
+
   // 在请求头中添加userTempId
   if(store.state.ShopCart.uuid_token){
     config.headers.userTempId=store.state.ShopCart.uuid_token
@@ -24,6 +23,8 @@ requests.interceptors.request.use((config)=>{
   if(store.state.Register.token){
     config.headers.token=store.state.Register.token
   }
+  // 请求条开始
+  nprogress.start()
   // config配置对象,其中包含请求头headers
   return config
 })
