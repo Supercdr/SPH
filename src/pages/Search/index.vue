@@ -286,7 +286,7 @@ export default {
       this.getData();
     },
     getPageNo(page) {
-      this.searchParams.pageNo = page;
+      this.searchParams.pageNo = page||1;
       this.getData();
     },
   },

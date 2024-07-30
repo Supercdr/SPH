@@ -42,7 +42,12 @@ export default [
     path:'/paySuccess',
     name:'PaySuccess',
     component:PaySuccess,
-    meta:{showFooter:true}
+    meta:{showFooter:true},
+    // 路由独享守卫
+    beforeEnter:(to,from,next)=>{
+      // 这里可以编写筛选逻辑
+      next()
+    }
   },
   {
     path:'/pay',

@@ -62,7 +62,7 @@ route.beforeEach(async (to, from, next) => {
       } else {
         try {
           await store.dispatch("getUserInfo");
-          next()
+          next();
         } catch (error) {
           await store.dispatch("logout");
           next("/login");
@@ -71,12 +71,14 @@ route.beforeEach(async (to, from, next) => {
     }
   } else {
     // 未登录
-    console.log('没有token')
-    let toPath=['pay','center','shopCart']
-    if(toPath.indexOf(to.path)==-1){
-      console.log(toPath.indexOf(to.path))
-      next('/login')
-    }else{
+    if (
+      to.path.indexOf("pay") != -1 ||
+      to.path.indexOf("shopCart") != -1 ||
+      to.path.indexOf("center") != -1||
+      to.path.indexOf("addCartSuccess") != -1
+    ) {
+      next("/login");
+    } else {
       next();
     }
   }
