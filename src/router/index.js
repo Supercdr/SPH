@@ -48,6 +48,7 @@ let route = new vueRouter({
     }
   },
 });
+// 路由前置守卫 用户登录
 route.beforeEach(async (to, from, next) => {
   let token = store.state.Register.token;
   let username = store.state.Register.userInfo.name;
@@ -77,7 +78,7 @@ route.beforeEach(async (to, from, next) => {
       to.path.indexOf("center") != -1||
       to.path.indexOf("addCartSuccess") != -1
     ) {
-      next("/login");
+      next("/login?redirect="+to.path);
     } else {
       next();
     }

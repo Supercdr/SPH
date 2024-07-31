@@ -89,10 +89,13 @@ export default {
     async login() {
       try {
         let { phone, password } = this;
-        phone &&
-          password &&
-          (await this.$store.dispatch("login", { phone, password }));
+        phone &&password &&(await this.$store.dispatch("login", { phone, password }));
+      //  判断登陆之前用户是否点击了某页面，若有，则进行路由重定向
+        if(this.$route.query.redirect){
+        this.$router.push(this.$route.query.redirect)
+       }else{
         this.$router.push('home')
+       }
       } catch (error) {
         alert(error.message)
       }
